@@ -68,6 +68,10 @@ public class Enemy : MonoBehaviour
         // if(other.gameObject.name.Contains("Bullet)){
         if(other.gameObject.CompareTag("Bullet")){
             other.gameObject.SetActive(false);
+            //리스트에 넣을 경우에는 PlayerFire 클래스를 동원해야 리스트를 얻을 수 있다.
+            // GameObject player = GameObject.Find("Player");
+            // PlayerFire playerFire = player.GetComponent<PlayerFire>();
+            PlayerFire.bulletObjectPool.Add(other.gameObject);
         }
         else{ // Bullet  이외의 것은 
             Destroy(other.gameObject);
@@ -75,6 +79,11 @@ public class Enemy : MonoBehaviour
         
         // Destroy(gameObject);
         gameObject.SetActive(false);
+
+        // GameObject enemyMg = GameObject.Find("EnemyManager");
+        // EnemyManager enemyManager = enemyMg.GetComponent<EnemyManager>();
+        EnemyManager.enemyObjectPool.Add(gameObject);
+
 
         // 에너미 잡을 때마다 현재 점수를 업데이트
         // GameObject smObject = GameObject.Find("ScoreManager");

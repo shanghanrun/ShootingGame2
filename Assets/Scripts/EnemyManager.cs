@@ -7,7 +7,8 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] GameObject enemyPrefab;
 
     public int poolSize =10;
-    GameObject[] enemyObjectPool;
+    // GameObject[] enemyObjectPool;
+    public static List<GameObject> enemyObjectPool;
     public Transform[] spawnPoints;
 
     float currentTime;
@@ -22,11 +23,13 @@ public class EnemyManager : MonoBehaviour
         createTime = Random.Range(minTime, maxTime);
 
         // 오브젝트풀 만들기
-        enemyObjectPool = new GameObject[poolSize];
+        // enemyObjectPool = new GameObject[poolSize];
+        enemyObjectPool = new List<GameObject>();
+
         for (int i=0; i<poolSize; i++){
             GameObject enemy = Instantiate(enemyPrefab);
             enemy.SetActive(false);
-            enemyObjectPool[i] = enemy;
+            enemyObjectPool.Add(enemy);
         }
     }
     
@@ -34,21 +37,29 @@ public class EnemyManager : MonoBehaviour
         currentTime += Time.deltaTime;
 
         if(currentTime > createTime){
-            
-            for(int i=0; i<poolSize; i++){
-                GameObject enemy = enemyObjectPool[i];
-                int index = Random.Range(0, spawnPoints.Length); 
+            if(enemyObjectPool.Count >0){
+                GameObject enemy = enemyObjectPool[0];
+                enemy.SetActive(true);
+                enemyObjectPool.Remove(enemy);
 
-                if(enemy.activeSelf == false){
-                    // enemy.transform.position = transform.position;
-                    enemy.transform.position = spawnPoints[index].position;
-
-                    enemy.SetActive(true);
-
-                    //단 하나 생성
-                    break;
-                }
+                int index = Random.Range(0, spawnPoints.Length);
+                enemy.transform.position = spawnPoints[index].position;
             }
+            
+            // for(int i=0; i<poolSize; i++){
+            //     GameObject enemy = enemyObjectPool[i];
+            //     int index = Random.Range(0, spawnPoints.Length); 
+
+            //     if(enemy.activeSelf == false){
+            //         // enemy.transform.position = transform.position;
+            //         enemy.transform.position = spawnPoints[index].position;
+
+            //         enemy.SetActive(true);
+
+            //         //단 하나 생성
+            //         break;
+            //     }
+            // }
 
             // 적을 생상한 후, 적의 생성시간을 다시 설정(왜냐면 Start는 한번만 실행. 그래서 고정된다.)
 
